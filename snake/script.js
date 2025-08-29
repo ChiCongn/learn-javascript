@@ -14,6 +14,10 @@ let snake = [
   {x: 7 * BOX, y: 9 * BOX}
 ];
 
+function drawBoard() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 function drawSnake() {
   for (let i = 0; i < snake.length; i++) {
     ctx.fillStyle = i === 0 ? 'lime' : 'white';
@@ -33,3 +37,4 @@ document.addEventListener('keydown', (e) => {
 
 
 drawSnake();
+//drawBoard();
