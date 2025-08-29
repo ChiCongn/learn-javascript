@@ -9,6 +9,7 @@ const scoreEl = document.getElementById('score');
 const startBtn = document.getElementById('startBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 
+let isOver;
 let snake, direction, food, gameInterval, speed, score;
 
 function initGame() {
@@ -18,6 +19,7 @@ function initGame() {
     { x: 7 * BOX, y: 10 * BOX }
   ];
   direction = 'RIGHT';
+  isOver = false;
   food = genRandomFood();
   score = 0;
   speed = 200;
@@ -80,6 +82,7 @@ function gameLoop() {
     clearInterval(gameInterval);
     gameInterval = null;
     console.log("Game Over!");
+    isOver = true;
     return;
   }
 
@@ -108,12 +111,15 @@ startBtn.addEventListener('click', () => {
 });
 
 pauseBtn.addEventListener('click', () => {
+  if (isOver) return;
   if (gameInterval) {
     clearInterval(gameInterval);
     gameInterval = null;
     pauseBtn.textContent = 'Resume';
+    console.log('resume');
   } else {
     gameInterval = setInterval(gameLoop, speed);
     pauseBtn.textContent = 'Pause';
+    console.log('pause');
   }
 });
