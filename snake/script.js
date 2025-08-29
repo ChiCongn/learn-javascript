@@ -5,10 +5,11 @@ const BOX = 20; // 20px
 const COLS = canvas.width / BOX;
 const ROWS = canvas.height / BOX;
 
+const scoreEl = document.getElementById('score');
 const startBtn = document.getElementById('startBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 
-let snake, direction, food, gameInterval, speed;
+let snake, direction, food, gameInterval, speed, score;
 
 function initGame() {
   snake = [
@@ -18,7 +19,8 @@ function initGame() {
   ];
   direction = 'RIGHT';
   food = genRandomFood();
-  speed = 240;
+  score = 0;
+  speed = 200;
   if (gameInterval) clearInterval(gameInterval);
   gameInterval = setInterval(gameLoop, speed);
 }
@@ -85,6 +87,15 @@ function gameLoop() {
 
   if (willEat) {
     food = genRandomFood();
+    score++;
+    scoreEl.textContent = 'Score: ' + score;
+    // increase speed
+    if (score % 5 === 0 && speed > 55) {
+      speed -= 10;
+      console.log('speedup')
+      clearInterval(gameInterval);
+      gameInterval = setInterval(gameLoop, speed);
+    }
   } else {
     snake.pop(); // drop tail
   }
