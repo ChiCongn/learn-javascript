@@ -1,0 +1,23 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0b0b;
+  color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.game-container {
+  text-align: center;
+}
+canvas {
+  background: #000;
+  border: 4px solid #333;
+  display: block;
+  margin: 12px auto;
+}
+.hud { margin-bottom: 6px; }
+button { margin-left: 6px; padding: 6px 10px; }
+.hint { color: #999; font-size: 14px; }
