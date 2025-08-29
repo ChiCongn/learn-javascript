@@ -21,4 +21,15 @@ function drawSnake() {
   }
 }
 
+let direction = "RIGHT";
+
+document.addEventListener('keydown', (e) => {
+  const k = e.key;
+  if ((k === 'ArrowLeft' || k === 'a') && direction !== 'RIGHT') direction = 'LEFT';
+  if ((k === 'ArrowUp'   || k === 'w') && direction !== 'DOWN')  direction = 'UP';
+  if ((k === 'ArrowRight'|| k === 'd') && direction !== 'LEFT')  direction = 'RIGHT';
+  if ((k === 'ArrowDown' || k === 's') && direction !== 'UP')    direction = 'DOWN';
+});
+
+
 drawSnake();
