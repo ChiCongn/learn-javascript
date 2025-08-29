@@ -6,7 +6,6 @@ const COLS = canvas.width / BOX;
 const ROWS = canvas.height / BOX;
 
 ctx.fillStyle = 'red';
-ctx.fillRect(0, 0, BOX, BOX);
 
 let snake = [
   {x: 9 * BOX, y: 9 * BOX},
@@ -25,6 +24,24 @@ function drawSnake() {
   }
 }
 
+let food;
+
+function genRandomFood() {
+  let randomX, randomY;
+  
+  do {
+    randomX = Math.floor(Math.random() * COLS) * BOX;
+    randomY = Math.floor(Math.random() * ROWS) * BOX;
+  } while (snake && snake.some(seg => seg.x === randomX && seg.y === randomY));
+
+  return {x: randomX, y: randomY};
+}
+
+function drawFood() {
+  ctx.fillStyle = 'red';
+  ctx.fillRect(food.x, food.y, BOX, BOX);
+}
+
 let direction = "RIGHT";
 
 document.addEventListener('keydown', (e) => {
@@ -37,4 +54,6 @@ document.addEventListener('keydown', (e) => {
 
 
 drawSnake();
+food = genRandomFood();
+drawFood();
 //drawBoard();
