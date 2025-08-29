@@ -5,13 +5,23 @@ const BOX = 20; // 20px
 const COLS = canvas.width / BOX;
 const ROWS = canvas.height / BOX;
 
-ctx.fillStyle = 'red';
+const startBtn = document.getElementById('startBtn');
+const pauseBtn = document.getElementById('pauseBtn');
 
-let snake = [
-  {x: 9 * BOX, y: 9 * BOX},
-  {x: 8 * BOX, y: 9 * BOX},
-  {x: 7 * BOX, y: 9 * BOX}
-];
+let snake, direction, food, gameInterval, speed;
+
+function initGame() {
+  snake = [
+    { x: 9 * BOX, y: 10 * BOX },
+    { x: 8 * BOX, y: 10 * BOX },
+    { x: 7 * BOX, y: 10 * BOX }
+  ];
+  direction = 'RIGHT';
+  food = genRandomFood();
+  speed = 240;
+  if (gameInterval) clearInterval(gameInterval);
+  gameInterval = setInterval(gameLoop, speed);
+}
 
 function drawBoard() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -23,8 +33,6 @@ function drawSnake() {
     ctx.fillRect(snake[i].x, snake[i].y, BOX, BOX);
   }
 }
-
-let food;
 
 function genRandomFood() {
   let randomX, randomY;
@@ -42,8 +50,6 @@ function drawFood() {
   ctx.fillRect(food.x, food.y, BOX, BOX);
 }
 
-let direction = "RIGHT";
-
 document.addEventListener('keydown', (e) => {
   const k = e.key;
   if ((k === 'ArrowLeft' || k === 'a') && direction !== 'RIGHT') direction = 'LEFT';
@@ -52,8 +58,51 @@ document.addEventListener('keydown', (e) => {
   if ((k === 'ArrowDown' || k === 's') && direction !== 'UP')    direction = 'DOWN';
 });
 
+function collision(head, body) {
+  return body.some(seg => seg.x === head.x && seg.y === head.y) || head.x < 0 || head.x >= canvas.width ||
+    head.y < 0 || head.y >= canvas.height;
+}
 
-drawSnake();
-food = genRandomFood();
-drawFood();
-//drawBoard();
+function gameLoop() {
+  drawBoard();
+  drawSnake();
+  drawFood();
+
+  const head = {x: snake[0].x, y: snake[0].y};
+  if (direction === 'LEFT')  head.x -= BOX;
+  if (direction === 'RIGHT') head.x += BOX;
+  if (direction === 'UP')    head.y -= BOX;
+  if (direction === 'DOWN')  head.y += BOX;
+
+  if (collision(head, snake)) {
+    clearInterval(gameInterval);
+    gameInterval = null;
+    console.log("Game Over!");
+    return;
+  }
+
+  const willEat = head.x === food.x && head.y === food.y;
+
+  if (willEat) {
+    food = genRandomFood();
+  } else {
+    snake.pop(); // drop tail
+  }
+  
+  snake.unshift(head); //add new head to front
+}
+
+startBtn.addEventListener('click', () => {
+  initGame();
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (gameInterval) {
+    clearInterval(gameInterval);
+    gameInterval = null;
+    pauseBtn.textContent = 'Resume';
+  } else {
+    gameInterval = setInterval(gameLoop, speed);
+    pauseBtn.textContent = 'Pause';
+  }
+});
